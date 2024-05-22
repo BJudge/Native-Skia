@@ -5,7 +5,6 @@ import {
   useWindowDimensions,
   StatusBar,
 } from "react-native";
-import React from "react";
 
 export default function useApplicationDimensions(): ScaledSize {
   const { width, height, scale, fontScale } = useWindowDimensions();
