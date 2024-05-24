@@ -8,6 +8,11 @@ import {
   vec,
 } from "@shopify/react-native-skia";
 import { BlurView } from "expo-blur";
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import { useForecastSheetPosition } from "../../context/ForecastSheetContext";
 
 interface ForecastSheetBackgroundProps {
   width: number;
@@ -23,8 +28,19 @@ const ForecastSheetBackground = ({
   const borderPath = `M  0 ${cornerRadius} A ${cornerRadius} ${cornerRadius} 0 0 1 ${cornerRadius} 0 H ${
     width - cornerRadius
   } A${cornerRadius} ${cornerRadius} 0 0 1 ${width} ${cornerRadius}`;
+  const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
+  const animatedPosition = useForecastSheetPosition();
+  const blurViewStyles = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        animatedPosition.value,
+        [0, 0.5],
+        ["transparent", "#422E5a"]
+      ),
+    };
+  });
   return (
-    <BlurView
+    <AnimatedBlurView
       style={{
         ...StyleSheet.absoluteFillObject,
         borderRadius: cornerRadius,
@@ -55,7 +71,7 @@ const ForecastSheetBackground = ({
           />
         </Path>
       </Canvas>
-    </BlurView>
+    </AnimatedBlurView>
   );
 };
 

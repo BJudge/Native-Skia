@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ForecastSheet from "./components/sheet/ForecastSheet";
 import Home from "./components/section/Home";
+import BasicAnimations from "./screens/BasicAnimations";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {

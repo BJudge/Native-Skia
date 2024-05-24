@@ -19,22 +19,43 @@ import HumidityWidget from "../widgets/HumidityWidget";
 import VisibilityWidget from "../widgets/VisibilityWidget";
 import PressureWidget from "../widgets/PressureWidget";
 import { ScrollView } from "react-native-gesture-handler";
+import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { useForecastSheetPosition } from "../../context/ForecastSheetContext";
 
 const ForecastSheet = () => {
   const { width, height } = useApplicationDimensions();
   const smallWidgetSize = width / 2 - 20;
   const snapPoints = ["38.5%", "83%"];
   const firstSnapPoint = height * (parseFloat(snapPoints[0]) / 100);
+  const secondSnapPoint = height * (parseFloat(snapPoints[1]) / 100);
+  const minY = height - secondSnapPoint;
+  const maxY = height - firstSnapPoint;
   const cornerRadius = 44;
   const capsuleRadius = 30;
   const capsuleHeight = height * 0.17;
   const capsuleWidth = width * 0.15;
+  const animatedPosition = useForecastSheetPosition();
   const [selectedForecastType, setSelectedForecastType] =
     useState<ForecastType>(ForecastType.Hourly);
+  const currentPosition = useSharedValue(0);
+  const normalizePosition = (position: number) => {
+    "worklet";
+    return ((position - maxY) / (maxY - minY)) * -1;
+  };
+  useAnimatedReaction(
+    () => {
+      return currentPosition.value;
+    },
+    (cv) => {
+      animatedPosition.value = normalizePosition(cv);
+    }
+  );
 
   return (
     <BottomSheet
       snapPoints={snapPoints}
+      animatedPosition={currentPosition}
+      animateOnMount={false}
       handleIndicatorStyle={{
         width: 48,
         height: 5,
@@ -66,7 +87,7 @@ const ForecastSheet = () => {
             }
           />
           <View style={{ flex: 1, paddingTop: 30, paddingBottom: 50 }}>
-            <AirQualityWidget width={30} height={150} />
+            <AirQualityWidget width={width} height={150} />
             <View
               style={{
                 flexDirection: "row",
