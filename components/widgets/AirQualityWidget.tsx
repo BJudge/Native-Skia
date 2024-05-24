@@ -1,7 +1,4 @@
-import {
-  StyleProp,
-  StyleSheet,
-} from "react-native";
+import { StyleProp, StyleSheet } from "react-native";
 import React from "react";
 import {
   Canvas,
@@ -14,7 +11,7 @@ import {
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import Widget, { WidgetDimensionsProps } from "./base/Widget";
 
-const AirQualityWidget = ({ width, height }:WidgetDimensionsProps) => {
+const AirQualityWidget = ({ width, height }: WidgetDimensionsProps) => {
   return (
     <>
       <Widget width={width} height={height}>
@@ -62,6 +59,4 @@ const AirQualityWidget = ({ width, height }:WidgetDimensionsProps) => {
 
 export default AirQualityWidget;
 
-const styles = StyleSheet.create({
-  
-});
+const styles = StyleSheet.create({});
