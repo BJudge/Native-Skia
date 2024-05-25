@@ -36,6 +36,14 @@ const WeatherInfo = ({ weather }: WeatherInfoProps) => {
     };
   });
 
+  const animatedSeperatorTxtStyle = useAnimatedStyle(() => {
+    const display = animatedPosition.value > 0.5 ? "flex" : "none";
+    return {
+      display,
+      opacity: interpolate(animatedPosition.value, [0, 0.5, 1], [0, 0, 1]),
+    };
+  });
+
   const animatedTempTxtStyles = useAnimatedStyle(() => {
     const fontFamily = animatedPosition.value > 0.5 ? "SF-Semibold" : "SF-Thin";
     return {
@@ -55,6 +63,24 @@ const WeatherInfo = ({ weather }: WeatherInfoProps) => {
       opacity: interpolate(animatedPosition.value, [0, 0.5], [1, 0]),
     };
   });
+  const animatedTempConditionStyles = useAnimatedStyle(() => {
+    const flexDirection = animatedPosition.value > 0.5 ? "row" : "column";
+    return { flexDirection };
+  });
+  const animatedConditionTxtStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            animatedPosition.value,
+            [0, 0.5, 1],
+            [0, -20, 0],
+            Extrapolation.CLAMP
+          ),
+        },
+      ],
+    };
+  });
   return (
     <Animated.View
       style={[
@@ -66,11 +92,28 @@ const WeatherInfo = ({ weather }: WeatherInfoProps) => {
       ]}
     >
       <Animated.Text style={styles.cityText}>{city}</Animated.Text>
-      <Animated.Text style={[styles.temperatureText, animatedTempTxtStyles]}>
-        {temperature}
-        {DEGREE_SYMBOL}
-      </Animated.Text>
-      <Animated.Text style={styles.conditionText}>{condition}</Animated.Text>
+      <Animated.View
+        style={[{ alignItems: "center" }, animatedTempConditionStyles]}
+      >
+        <Animated.View style={{ flexDirection: "row" }}>
+          <Animated.Text
+            style={[styles.temperatureText, animatedTempTxtStyles]}
+          >
+            {temperature}
+            {DEGREE_SYMBOL}
+          </Animated.Text>
+          <Animated.Text
+            style={[styles.seperatorText, animatedSeperatorTxtStyle]}
+          >
+            |
+          </Animated.Text>
+        </Animated.View>
+        <Animated.Text
+          style={[styles.conditionText, animatedTempConditionStyles]}
+        >
+          {condition}
+        </Animated.Text>
+      </Animated.View>
       <Animated.Text style={[styles.minMaxText, animatedMinMaxTxtStyles]}>
         H:{high}
         {DEGREE_SYMBOL} L:{low}
@@ -94,6 +137,14 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 96,
     lineHeight: 96,
+  },
+  seperatorText: {
+    fontFamily: "SF-Semibold",
+    color: "rgba(235,235,245,0.6)",
+    fontSize: 20,
+    lineHeight: 20,
+    marginHorizontal: 2,
+    display: "none",
   },
   conditionText: {
     fontFamily: "SF-Semibold",

@@ -1,3 +1,4 @@
+// import "react-navtive-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { Canvas, LinearGradient, Rect, vec } from "@shopify/react-native-skia";
@@ -13,6 +14,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ForecastSheet from "./components/sheet/ForecastSheet";
 import Home from "./components/section/Home";
 import BasicAnimations from "./screens/BasicAnimations";
+import RootNavigator from "./navigators/RootNavigator";
+import { NavigationContainer } from "@react-navigation/native";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -32,7 +35,9 @@ export default function App() {
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
-        <Home />
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
         <StatusBar style="light" />
       </GestureHandlerRootView>
     </SafeAreaProvider>
