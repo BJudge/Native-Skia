@@ -16,6 +16,7 @@ import Home from "./components/section/Home";
 import BasicAnimations from "./screens/BasicAnimations";
 import RootNavigator from "./navigators/RootNavigator";
 import { NavigationContainer } from "@react-navigation/native";
+import { WeatherDataProvider } from "./context/WeatherDataContext";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -34,12 +35,14 @@ export default function App() {
   if (!fontsLoaded) return null;
   return (
     <SafeAreaProvider onLayout={onLayoutRootView}>
-      <GestureHandlerRootView>
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-        <StatusBar style="light" />
-      </GestureHandlerRootView>
+      <WeatherDataProvider>
+        <GestureHandlerRootView>
+          <NavigationContainer>
+            <RootNavigator />
+          </NavigationContainer>
+          <StatusBar style="light" />
+        </GestureHandlerRootView>
+      </WeatherDataProvider>
     </SafeAreaProvider>
   );
 }

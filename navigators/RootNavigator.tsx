@@ -1,20 +1,42 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "../components/section/Home";
 import WeatherList from "../screens/WeatherList";
+import { eventEmitter } from "../utils/eventEmitter";
+import {
+  fetchhWeatherData,
+  getLocationData,
+} from "../services/LocationService";
+import { useWeatherData } from "../context/WeatherDataContext";
 
 const Stack = createStackNavigator();
 
 const RootNavigator = () => {
+  const { setWeatherData } = useWeatherData();
+  const handleLocationEvent = async () => {
+    const locationData = await getLocationData();
+    if (locationData) {
+      const { latitude, longitude } = locationData;
+      const weatherData = await fetchhWeatherData(latitude, longitude);
+      setWeatherData(weatherData);
+    }
+  };
+  useEffect(() => {
+    const listener = eventEmitter.addListener("locationEvent", async () => {
+      await handleLocationEvent();
+    });
+    return () => listener.remove();
+  }, []);
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Stack.Screen name="list" component={WeatherList} />
       <Stack.Screen name="home" component={Home} />
+      <Stack.Screen name="list" component={WeatherList} />
     </Stack.Navigator>
   );
 };
